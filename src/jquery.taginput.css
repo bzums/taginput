@@ -1,0 +1,20 @@
+.taginput-wrapper {
+	padding: 4px;
+	height: auto;
+}
+
+.taginput-tag {
+	margin-right: 3px;
+	display: inline-block;
+}
+
+.taginput-button {
+	float: right;
+}
+		
+.taginput-wrapper input[type=text] {
+	display: inline-block;
+	border: 0;
+	padding: 4px;
+	background-color: inherit;
+}

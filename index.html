@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+
+		<link rel="stylesheet" href="bower_components/jqueryui/themes/smoothness/jquery-ui.css">
+		<link rel="stylesheet" href="bower_components/jqueryui/themes/smoothness/jquery.ui.theme.css">
+
+		<link rel="stylesheet" href="src/jquery.taginput.css">
+
+		<style type="text/css">
+
+			body {
+				margin: 10px;
+				margin-left: 15px;
+			}
+
+			h1 {
+				margin-top: 65px;
+			}
+
+			.navbar-header {
+    			float: right;
+			}
+
+			.com {
+			    color: #93a1a1;
+			}
+			.lit {
+			    color: #195f91;
+			}
+			.pun, .opn, .clo {
+			    color: #93a1a1;
+			}
+			.fun {
+			    color: #dc322f;
+			}
+			.str, .atv {
+			    color: #d14;
+			}
+			.kwd, .prettyprint .tag {
+			    color: #1e347b;
+			}
+			.typ, .atn, .dec, .var {
+			    color: teal;
+			}
+			.pln {
+			    color: #48484c;
+			}
+			.prettyprint {
+			    background-color: #f7f7f9;
+			    border: 1px solid #e1e1e8;
+			    padding: 8px;
+			    clear: both;
+			}
+
+		</style>
+	</head>
+	
+	<body>
+
+		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Code on Github</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="page-header">
+				<h1>jquery.taginput <small>Examples and API</small></h1>
+			</div>
+
+			<h2 class="page-header">Examples</h2>
+			<h3>Apply different ui-styles</h3>
+			<p class="lead">
+				You can apply different ui-styles on the widget using the <code>style</code> option.
+			</p>
+			<div class="panel panel-default">
+	  			<div class="panel-body">
+			    		<input id="taginput-jqueryui" type="text"  />
+				</div>
+				<div class="panel-footer">
+
+<pre class="prettyprint">
+$('#taginput-jqueryui').({
+	style: 'jquery'
+});
+</pre>
+
+				</div>
+			</div>
+		
+			<div class="panel panel-default">
+	  			<div class="panel-body">
+			    	<input id="taginput-bootstrap" type="text" placeholder="Add tag" />
+				</div>
+				<div class="panel-footer">
+
+<pre class="prettyprint">
+$('#taginput-bootstrap').taginput({
+	style: 'bootstrap'
+});
+</pre>
+					
+				</div>
+			</div>
+
+			<p class="lead">
+				Comming soon: more examples...
+			</p>
+
+			<h2 class="page-header">Options</h2>
+			<p class="lead">
+				Comming soon: A list of avaiale options and its default values to configure the widget.
+			</p>
+
+			<h2 class="page-header">Methods</h2>
+			<p class="lead">
+				Comming soon: A list of avaiale methods to interact with the widget.
+			</p>
+		</div>
+
+		<script src="bower_components/jquery/dist/jquery.js"></script>
+		<script src="bower_components/jqueryui/ui/jquery-ui.js"></script>
+		<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+		<script src="bower_components/google-code-prettify/src/prettify.js"></script>
+		<script src="src/jquery.taginput.js"></script>
+		<script src="main.js"></script>
+	</body>
+</html>
