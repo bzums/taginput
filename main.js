@@ -3,7 +3,7 @@ jQuery(function ($) {
 
 	prettyPrint();
 
-	$('#taginput-jqueryui').taginput();
+	var $elem = $('#taginput-jqueryui').taginput();
 
 	$('#taginput-bootstrap').taginput({
 		style: 'bootstrap'
