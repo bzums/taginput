@@ -41,7 +41,9 @@
 
         placeholder: 'Add tag...',
 
-        onExists: function($tag) {
+        allowMultiple: false,
+
+        exists: function($tag) {
       		$tag.hide().fadeIn();
     	},
 
@@ -84,11 +86,11 @@
             this.$input.wrap(style[ this.options.style ].wrapperTpl);
             
             // Bind events
-            this.$input.on( 'keydown', $.proxy(this._keydown, this));
+            this.$input.on( 'keydown.taginput', $.proxy(this._keydown, this));
 
             // Ease to focus input field
             var self = this;
-            this.$input.parent().on( 'click', 
+            this.$input.parent().on( 'click.taginput', 
             	function(){
                     self.$input.focus();
                 }
@@ -97,8 +99,8 @@
  
         _destroy: function () {
 
- 			this.$input.off('keydown');
- 			this.$input.parent().off('click');
+ 			this.$input.off('keydown.taginput');
+ 			this.$input.parent().off('click.taginput');
 
             this.$input.after().remove();
             this.$input.unwrap();
@@ -107,34 +109,31 @@
         // Keydown handler for the input field
         _keydown: function(event){
 
-            // Trigger keydown event and only proceed
-            // if callback is !== false
-            if(this.$element.trigger('onKeydown', {}) !== false){
+            console.log(event);
 
-                event.stopPropagation();
+            event.stopPropagation();
                 
-                var val = $.trim(this.$input.val());
+            var val = $.trim(this.$input.val());
 
-                // on backspace: 
-                // check whether there is previous tag to be edited
-                if(event.keyCode == keys.BACKSPACE && val === ""){
-                    this._dissolveLast();
-                    event.preventDefault();
-                }
+            // on backspace: 
+            // check whether there is previous tag to be edited
+            if(event.keyCode == keys.BACKSPACE && val === ""){
+                this._dissolveLast();
+                event.preventDefault();
+            }
                 
-                // on keys in options.separateKeyCodes:
-                // if input field value is not blank create new tag and clear input field
-                if($.inArray(event.keyCode, this.options.separateKeyCodes) >= 0){
-                    this._createTagFromInputField();
-                    event.preventDefault();
-                }
+            // on keys in options.separateKeyCodes:
+            // if input field value is not blank create new tag and clear input field
+            if($.inArray(event.keyCode, this.options.separateKeyCodes) >= 0){
+                this._createTagFromInputField();
+                event.preventDefault();
+            }
                 
-                // on tab: 
-                // prevent losing focus     
-                if (event.keyCode == keys.TAB){
-                    event.preventDefault();
-                }
-            }   
+            // on tab: 
+            // prevent losing focus     
+            if (event.keyCode == keys.TAB){
+                event.preventDefault();
+            }  
         },
 
         // Checks whether there is text in input field, if so:
@@ -187,7 +186,7 @@
             		return self.options.tagValue(tag).toString();
           	});
 
-      		this.$element.val(val.join()).trigger('change');
+      		this.$element.val(val).trigger('change');
         },
 
         // Checks whether a tag with the given name exists already
@@ -208,35 +207,44 @@
         // Adds a new tag with given name and data to the widget,
         // but only if the tag name is not present, yet
         add: function(tag){
-            
             var self = this;
 
-            // Call onExists if tag already exists
-            if(this.exists(tag)){
+            // Call exists if tag already exists
+            if(!this.options.allowMultiple && this.exists(tag)){
 
-				if (this.options.onExists) {
-         			this.options.onExists(this._getTagElem(tag));
+				if (this.options.exists) {
+         			this.options.exists.call(this.$element, this._getTagElem(tag));
         		}
             }  
             // Else update state
             else{
 
-	            // View
-	            var $tag = $(style[this.options.style].tagTpl);
-	            $tag.children().last().html(this.options.tagLabel(tag));
+                // User can avoid add via returning false in add event handler
+                var avoidAdd = false;
 
-	            $tag.data('taginput-data', tag)
-	            .on('click', function(event){
-	                event.preventDefault();
-	                self.remove(tag);
-	            });
-	            this.$input.before($tag);
+                if (this.options.add) {
+                    avoidAdd = (this.options.add.call(this.$element, tag) === false);
+                }
+
+                if(!avoidAdd){
 	            
-	            // Intern data
-	            this._tags.push(tag);
-	        }
+                    // View
+    	            var $tag = $(style[this.options.style].tagTpl);
+    	            $tag.children().last().html(this.options.tagLabel(tag));
 
-	        this._pushVal();
+    	            $tag.data('taginput-data', tag)
+    	            .on('click', function(event){
+    	                event.preventDefault();
+    	                self.remove(tag);
+    	            });
+    	            this.$input.before($tag);
+    	            
+    	            // Model
+    	            this._tags.push(tag);
+
+                    this._pushVal();
+                }
+	        }
         },
         
         // Deletes the tag(s) with the given name
@@ -244,16 +252,26 @@
             
             var self = this;
 
-            // view
-            this._getTagElem(tag).remove();
-                
-            // model
-            this._tags = $.grep(this._tags, function(value, index){
-                return self.options.tagValue(value) !== self.options.tagValue(tag);
-            });
+            // User can avoid remove via returning false in add event handler
+            var avoidRemove = false;
 
-            this._pushVal();
-            this.$input.focus();
+            if (this.options.remove) {
+                avoidRemove = (this.options.remove.call(this.$element, tag) === false);
+            }
+
+            if(!avoidRemove){
+
+                // View
+                this._getTagElem(tag).remove();
+                    
+                // Model
+                this._tags = $.grep(this._tags, function(value, index){
+                    return self.options.tagValue(value) !== self.options.tagValue(tag);
+                });
+
+                this._pushVal();
+                this.$input.focus();
+            }
         },
         
         // Returns array of data of all present tags 
@@ -283,14 +301,51 @@
         },
     };
 
-    $.fn[pluginName] = function( options ) {
-    	return this.each(function () {
-        	if ( !$.data(this, "plugin_" + pluginName )) {
-            	$.data( this, "plugin_" + pluginName,
-            	new Taginput( this, options ));
-        	}
+    // Register JQuery plugin
+    $.fn[ pluginName ] = function(arg1, arg2) {
+
+        var results = [];
+
+        this.each(function() {
+            var taginput = $(this).data(pluginName);
+
+            // Initialize a new tags input
+            if ( !taginput ) {
+
+                taginput = new Taginput(this, arg1);
+                $(this).data(pluginName, taginput);
+                results.push(this);
+
+                // Init tags from $(this).val()
+                $(this).val($(this).val());
+            } else {
+
+                // Invoke function on existing taginput
+                var retVal = taginput[arg1](arg2);
+                if (retVal !== undefined)
+                results.push(retVal);
+            }
         });
+
+        if ( typeof arg1 == 'string') {
+            // Return the results from the invoked function calls
+            return results.length > 1 ? results : results[0];
+        } else {
+            return arrayToJQueryCollection(results);
+        }
     };
+
+    // Create a jQuery collection from an array of dom elements
+    function arrayToJQueryCollection(arr){
+
+        var $elems = $();
+
+        $.each(arr, function(index, val){
+            $elems.push(val);
+        });
+
+        return $elems;
+    }
 
 
 })( jQuery, window, document );
