@@ -1,6 +1,13 @@
 jquery.taginput
 ========
-jQuery.ui widget for creating tags in an input field
+jQuery plugin for creating tags in an input field.
+I am aware of the fact that there are already a couple of implementations for this usecase. 
+
+For example, there is a nice implementation for [jQuery UI](https://github.com/aehlke/tag-it) and [Bootstrap](https://github.com/TimSchlechter/bootstrap-tagsinput). 
+
+I am trying to combine the best parts of existing implementations and to provide a plugin which is independent of any (ui-)frontend framework (for example jQuery UI or Bootstrap).
+
+Currently the plugin is in a very early stage and under heavy development (hopefully...) ;) For now, i would recommend to use one of the earlier mentioned implementations.
 
 ## Usage
 Examples can be found [here](http://bzums.github.com/taginput/).

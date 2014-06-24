@@ -48,11 +48,11 @@
     	},
 
     	tagLabel: function(tag){
-    		return tag.name;
+    		return tag;
     	},
 
     	tagValue: function(tag){
-      		return tag.name;
+      		return tag;
     	}
     },
 
@@ -109,15 +109,13 @@
         // Keydown handler for the input field
         _keydown: function(event){
 
-            console.log(event);
-
             event.stopPropagation();
                 
             var val = $.trim(this.$input.val());
 
             // on backspace: 
             // check whether there is previous tag to be edited
-            if(event.keyCode == keys.BACKSPACE && val === ""){
+            if(event.keyCode == keys.BACKSPACE && val === ''){
                 this._dissolveLast();
                 event.preventDefault();
             }
@@ -141,9 +139,12 @@
         _createTagFromInputField: function(){
 
             var val = $.trim(this.$input.val());
-            if(val !== ""){
-                this.add( { name: val }, null);
-                this.$input.val("");
+            if(val !== ''){
+                if(this.options.getTagObject){
+                    val = this.options.getTagObject(val);
+                }
+                this.add(val);
+                this.$input.val('');
             }
         },
         
@@ -153,7 +154,7 @@
 
             if(this._tags.length > 0){
                 var $btn = this.$input.prev(),
-                	tag = $btn.data("taginput-data");
+                	tag = $btn.data('taginput-data');
 
                 this.remove(tag);
                 this.$input.val(this.options.tagLabel(tag));
@@ -245,6 +246,8 @@
                     this._pushVal();
                 }
 	        }
+
+            return this.$element[0];
         },
         
         // Deletes the tag(s) with the given name
@@ -272,6 +275,8 @@
                 this._pushVal();
                 this.$input.focus();
             }
+
+            return this.$element[0];
         },
         
         // Returns array of data of all present tags 
@@ -289,6 +294,8 @@
             $.each(tags, function(index, value){
                 self.add(value);
             });
+
+            return this.$element[0];
         },
 
         // Deletes all present tags 
@@ -298,26 +305,26 @@
             $.each(self._tags, function(index, value){
                 self.remove(value);
             });
+
+            return this.$element[0];
         },
     };
 
     // Register JQuery plugin
     $.fn[ pluginName ] = function(arg1, arg2) {
 
+        var self = this;
         var results = [];
 
         this.each(function() {
-            var taginput = $(this).data(pluginName);
+            var taginput = self.data(pluginName);
 
             // Initialize a new tags input
             if ( !taginput ) {
 
-                taginput = new Taginput(this, arg1);
-                $(this).data(pluginName, taginput);
+                taginput = new Taginput(self, arg1);
+                self.data(pluginName, taginput);
                 results.push(this);
-
-                // Init tags from $(this).val()
-                $(this).val($(this).val());
             } else {
 
                 // Invoke function on existing taginput
@@ -329,10 +336,17 @@
 
         if ( typeof arg1 == 'string') {
             // Return the results from the invoked function calls
-            return results.length > 1 ? results : results[0];
-        } else {
-            return arrayToJQueryCollection(results);
+            if(results.length > 0){
+                // Return jQuery collection if return type of 
+                // invoked function is a dom element
+                if( results[0] !== this[0] ){
+                    return results.length > 1 ? results : results[0];
+                }
+            }
         }
+
+        // Else: return collection of matched elements
+        return arrayToJQueryCollection(results);
     };
 
     // Create a jQuery collection from an array of dom elements
