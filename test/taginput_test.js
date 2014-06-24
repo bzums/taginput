@@ -20,8 +20,8 @@ jQuery(function ($) {
 
         var $input = $('.taginput').taginput();
 
-        $input.taginput('add', { name: 'test1' } );
-        $input.taginput('add', { name: 'test2' } );
+        $input.taginput('add', 'test1');
+        $input.taginput('add', 'test2');
 
         assert.equal(getTagCount(), 2, "there should be one item");
         assert.equal(getTagCountDom(), 2, "there should be one item");
@@ -31,9 +31,9 @@ jQuery(function ($) {
         expect( 2 );
         
         var $input = $('.taginput').taginput();
-        $input.taginput('add', { name: 'test1' } );
-        $input.taginput('add', { name: 'test2' } );
-        $input.taginput('remove', { name: 'test1' } );
+        $input.taginput('add', 'test1');
+        $input.taginput('add', 'test2');
+        $input.taginput('remove', 'test1');
 
         assert.equal(getTagCount(), 1, "there should be one item");
         assert.equal(getTagCountDom(), 1, "there should be one item");
@@ -43,8 +43,8 @@ jQuery(function ($) {
         expect( 2 );
         
         var $input = $('.taginput').taginput();    
-        $input.taginput('add', { name: 'test1' } );
-        $input.taginput('add', { name: 'test2' } );
+        $input.taginput('add', 'test1');
+        $input.taginput('add', 'test2');
         $input.val('some');
         $input.taginput('clear');
 
@@ -56,11 +56,27 @@ jQuery(function ($) {
         expect( 2 );
 
         var $input = $('.taginput').taginput();
-        $input.taginput('add', { name: 'test' } );
-        $input.taginput('add', { name: 'test' } );
+        $input.taginput('add', 'test');
+        $input.taginput('add', 'test');
 
         assert.equal(getTagCount(), 1, "there should be one item");
         assert.equal(getTagCountDom(), 1, "there should be one item");
+    });
+
+    QUnit.test("chaining", function(assert) {
+        expect( 3 );
+
+        var $input = $('.taginput').taginput();
+        var $retValue = null;
+
+        $retValue = $input.taginput('add', 'test');
+        assert.deepEqual($retValue, $input, "add return value should be jquery object");
+
+        $retValue = $input.taginput('remove', 'test');
+        assert.deepEqual($retValue, $input, "remove return value should be jquery object");
+
+        $retValue = $input.taginput('clear', 'test');
+        assert.deepEqual($retValue, $input, "clear return value should be jquery object");
     });
 
     QUnit.module("DOM tests", {
