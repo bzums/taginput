@@ -2,7 +2,7 @@
  *  jQuery.ui widget for creating tags in an input field
  *
  *  Author: bzums
- *  Version: 0.3.0
+ *  Version: 1.0.0
  *  Copyright: www.samsam4.org
  *  License: MIT (http://www.opensource.org/licenses/mit-license.php) or GPLv3 (http://www.gnu.org/copyleft/gpl.html) at your own discretion
  *
