@@ -18,6 +18,6 @@
     "commit": "c572b1e2e856d04ff252bb14013e218f97786d90"
   },
   "_source": "git://github.com/tcollard/google-code-prettify.git",
-  "_target": "1.0.1",
+  "_target": "~1.0.1",
   "_originalSource": "google-code-prettify"
 }

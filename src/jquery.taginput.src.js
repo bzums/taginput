@@ -2,7 +2,7 @@
  *  jQuery.ui widget for creating tags in an input field
  *
  *  Author: bzums
- *  Version: 0.1.0
+ *  Version: 0.3.0
  *  Copyright: www.samsam4.org
  *  License: MIT (http://www.opensource.org/licenses/mit-license.php) or GPLv3 (http://www.gnu.org/copyleft/gpl.html) at your own discretion
  *
@@ -12,8 +12,9 @@
 
 ;(function ( $, window, document, undefined ) {
 
-	// Mapping for keys
-    var keys = {
+    var pluginName = 'taginput',
+
+    keys = {
         WHITESPACE: 32,
         ENTER: 13,
         TAB: 9,
@@ -43,7 +44,9 @@
 
         allowMultiple: false,
 
-        exists: function($tag) {
+        caseSensitive: false,
+
+        onExists: function($tag) {
       		$tag.hide().fadeIn();
     	},
 
@@ -54,9 +57,7 @@
     	tagValue: function(tag){
       		return tag;
     	}
-    },
-
-    pluginName = 'taginput';
+    };
 
     // Constructor function
     function Taginput(element, options){
@@ -92,18 +93,9 @@
             var self = this;
             this.$input.parent().on( 'click.taginput', 
             	function(){
-                    self.$input.focus();
+                    self.focus();
                 }
             );
-        },
- 
-        _destroy: function () {
-
- 			this.$input.off('keydown.taginput');
- 			this.$input.parent().off('click.taginput');
-
-            this.$input.after().remove();
-            this.$input.unwrap();
         },
         
         // Keydown handler for the input field
@@ -159,7 +151,25 @@
                 this.remove(tag);
                 this.$input.val(this.options.tagLabel(tag));
             }
-        },        
+        },
+
+        // Compares values of two tags w.r.t. to caseSensitive option
+        _compareTags: function(a, b){
+
+            // Decide whether to compare case-sensitive
+            if(this.options.caseSensitive){
+                if( this.options.tagValue(a) === this.options.tagValue(b) ){
+                   return true;
+                }
+            }else{
+                if( this.options.tagValue(a).toString().toLowerCase() === 
+                    this.options.tagValue(b).toString().toLowerCase() ){
+                    return true;
+                }
+            }
+
+            return false;
+        },       
 
         // Returns jQuery element of the tag with given name
         _getTagElem: function(tag){
@@ -170,7 +180,7 @@
 			this.$input.parent().find('.taginput-tag').each(function(index, value){
 
 				var data = $(value).data('taginput-data');
-                if(self.options.tagValue(data) === self.options.tagValue(tag)){
+                if(self._compareTags(data, tag)){
                     $elem = $(value);
                 }
             });
@@ -190,15 +200,25 @@
       		this.$element.val(val).trigger('change');
         },
 
+        destroy: function () {
+
+            this.$input.off('keydown.taginput');
+            this.$input.parent().off('click.taginput');
+
+            this.$input.parent().remove();
+            this.$element.removeData(pluginName);
+
+            return this.$element[0];
+        },
+
         // Checks whether a tag with the given name exists already
         exists: function(tag){
 
         	var self = this,
-        		found = false;
-
+                found = false;
         	$.each(this._tags, function(index, value){
-                if(self.options.tagValue(tag) === self.options.tagValue(value)){
-                	found =  true;
+                if(self._compareTags(tag, value)){
+                    found = true;
                 }
             });
 
@@ -213,18 +233,17 @@
             // Call exists if tag already exists
             if(!this.options.allowMultiple && this.exists(tag)){
 
-				if (this.options.exists) {
-         			this.options.exists.call(this.$element, this._getTagElem(tag));
+				if (this.options.onExists && typeof this.options.onExists === 'function') {
+         			this.options.onExists.call(this.$element, this._getTagElem(tag));
         		}
             }  
-            // Else update state
             else{
 
-                // User can avoid add via returning false in add event handler
+                // User can avoid add via returning false in onAdd event handler
                 var avoidAdd = false;
 
-                if (this.options.add) {
-                    avoidAdd = (this.options.add.call(this.$element, tag) === false);
+                if (this.options.onAdd && typeof this.options.onAdd === 'function') {
+                    avoidAdd = (this.options.onAdd.call(this.$element, tag) === false);
                 }
 
                 if(!avoidAdd){
@@ -255,11 +274,11 @@
             
             var self = this;
 
-            // User can avoid remove via returning false in add event handler
+            // User can avoid remove via returning false in onRemove event handler
             var avoidRemove = false;
 
-            if (this.options.remove) {
-                avoidRemove = (this.options.remove.call(this.$element, tag) === false);
+            if (this.options.onRemove && typeof this.options.onRemove === 'function') {
+                avoidRemove = (this.options.onRemove.call(this.$element, tag) === false);
             }
 
             if(!avoidRemove){
@@ -308,6 +327,17 @@
 
             return this.$element[0];
         },
+
+        // Focus input field
+        focus: function(){
+            this.$input.focus();
+            return this.$element[0];
+        },
+
+        // Returns the added input field
+        getInputElement: function(){
+            return this.$input;
+        }
     };
 
     // Register JQuery plugin
@@ -360,6 +390,5 @@
 
         return $elems;
     }
-
 
 })( jQuery, window, document );

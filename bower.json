@@ -2,7 +2,7 @@
   "name": "taginput",
   "version": "0.3.0",
   "homepage": "https://github.com/bzums/taginput",
-  "description": "jQuery plugin for tag input fields supporting different ui-styles (jQuery UI and Bootstrap...)",
+  "description": "jQuery plugin for tag input fields supporting different ui-styles",
   "main": [
     "src/jquery.taginput.min.js",
     "src/jquery.taginput.css"
