@@ -1,12 +1,12 @@
-jQuery(function ($) {
-	'use strict';
+jQuery(function($) {
+    'use strict';
 
-	prettyPrint();
+    prettyPrint();
 
-	var $elem = $('#taginput-jqueryui').taginput();
+    var $input = $('#taginput-jqueryui').taginput();
 
-	$('#taginput-bootstrap').taginput({
-		style: 'bootstrap'
-	});
+    $('#taginput-bootstrap').taginput({
+        style: 'bootstrap'
+    });
 
 });

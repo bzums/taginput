@@ -1,0 +1,31 @@
+{
+    "name": "taginput",
+    "title": "jQuery Taginput",
+    "description": "jQuery plugin for tag input fields supporting different ui-styles",
+  "keywords": [
+    "tags",
+    "bootstrap",
+    "jqueryui",
+    "input",
+    "form"
+  ],
+    "version": "1.0.0",
+    "author": {
+        "name": "bzums"
+    },
+    "licenses": [{
+        "type": "MIT",
+        "url": "https://github.com/bzums/taginput/blob/master/LICENSE_MIT"
+    },
+    {
+        "type": "GPL 3.0",
+        "url": "https://github.com/bzums/taginput/blob/master/LICENSE_GPL3.0"
+    }],
+    "bugs": "https://github.com/bzums/taginput/issues",
+    "homepage": "https://github.com/bzums/taginput",
+    "docs": "http://bzums.github.io/taginput/",
+    "download": "http://bzums.github.io/taginput/src/jquery.taginput.js",
+    "dependencies": {
+        "jquery": ">=1.7"
+    }
+}
