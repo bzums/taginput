@@ -23,7 +23,7 @@
 
     style = {
 
-        jquery: {
+        jqueryui: {
             tagTpl: '<button class="taginput-tag ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-secondary" role="button" aria-disabled="false"><span class="ui-button-icon-secondary ui-icon ui-icon-close"></span><span class="ui-button-text"></span></button>',
             wrapperTpl: '<div class="taginput-wrapper ui-widget ui-widget-content ui-corner-all"></div>'
         },
@@ -36,7 +36,7 @@
 
     defaults = {
 
-        style: 'jquery',
+        style: 'jqueryui',
 
         separateKeyCodes: [ keys.WHITESPACE, keys.ENTER, keys.TAB ],
 
