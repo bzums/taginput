@@ -74,8 +74,31 @@
 			</div>
 
 			<h2 class="page-header">Examples</h2>
+
+			<h3>Basic usage</h3>
+
+			<p>
+				To create an taginput widget simply call:
+			</p>
+
+			<pre class="prettyprint">$('selector').taginput();</pre>	
+
+			<p>The element on which you create a taginput widget should be an <code>input</code> element.</p>
+
+			<p>
+				If you want to overwrite default options simply pass an object literal to the constructor:
+			</p>
+
+			<pre class="prettyprint">$('selector').taginput( { option: value } );</pre>	
+
+			<p>
+				To call methods related to the widget we use the <a href="http://learn.jquery.com/jquery-ui/widget-factory/widget-method-invocation/">jQuery UI widget style</a>:
+			</p>
+
+			<pre class="prettyprint">$('selector').taginput('add', 'someTag');</pre>	
+
 			<h3>Apply different ui-styles</h3>
-			<p class="lead">
+			<p>
 				You can apply different ui-styles on the widget using the <code>style</code> option.
 			</p>
 			<div class="panel panel-default">
@@ -85,8 +108,8 @@
 				<div class="panel-footer">
 
 <pre class="prettyprint">
-$('#taginput-jqueryui').({
-	style: 'jquery'
+$('selector').taginput({
+	style: 'jqueryui'
 });
 </pre>
 
@@ -100,7 +123,7 @@ $('#taginput-jqueryui').({
 				<div class="panel-footer">
 
 <pre class="prettyprint">
-$('#taginput-bootstrap').taginput({
+$('selector').taginput({
 	style: 'bootstrap'
 });
 </pre>
@@ -108,19 +131,237 @@ $('#taginput-bootstrap').taginput({
 				</div>
 			</div>
 
-			<p class="lead">
-				Comming soon: more examples...
-			</p>
-
 			<h2 class="page-header">Options</h2>
-			<p class="lead">
-				Comming soon: A list of avaiale options and its default values to configure the widget.
-			</p>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">style</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Determines the ui style the widget is created with.
+	  				</p>
+
+			    	<h5>type</h5>
+			    	<span class="link">String</span>, <code>'jqueryui'</code> or <code>'bootstrap'</code>
+
+			    	<h5>default</h5>
+			    	<code>'jqueryui'</code>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">separateKeyCodes</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Determines on which key codes a tag should be created.
+	  				</p>
+
+			    	<h5>type</h5>
+			    	<span class="link">Number array</span>
+
+			    	<h5>default</h5>
+			    	<code>[32, 13, 9]</code> (whitespace, enter, tab)
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">allowMultiple</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Determines whether multiple tags with the same value are allowed.
+	  				</p>
+
+			    	<h5>type</h5>
+			    	<span class="link">Boolean</span>
+
+			    	<h5>default</h5>
+			    	<code>false</code>
+				</div>
+			</div>	
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">caseSensitive</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Determines whether to treat tag values case-sensitive or not. In other words: Is the value <code>'Test'</code> unequal <code>'test'</code>?
+	  				</p>
+
+			    	<h5>type</h5>
+			    	<span class="link">Boolean</span>
+
+			    	<h5>default</h5>
+			    	<code>false</code>
+				</div>
+			</div>			
+
+			<h2 class="page-header">Callbacks</h2>	
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">onExists( $tag )</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Called when a tag value is added that already exists.
+	  				</p>
+
+			    	<h5>parameters</h5>
+			    	$tag, <span class="link">jQuery object</span> reffering to the already existing tag element
+
+			    	<h5>default</h5>
+<pre class="prettyprint">
+function($tag) {
+      $tag.hide().fadeIn();
+}
+</pre>
+				</div>
+			</div>		
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">onAdd( value )</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Called when a tag is added.<br>
+	  					Return <code>false</code> to avoid adding the tag.
+	  				</p>
+
+			    	<h5>parameters</h5>
+			    	value, value of the tag
+
+			    	<h5>returns</h5>
+			    	<span class="link">Boolean</span>, whether to add the tag or not
+				</div>
+			</div>	
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">onRemove( value )</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Called when a tag is removed.<br>
+	  					Return <code>false</code> to avoid removing the tag.
+	  				</p>
+
+			    	<h5>parameters</h5>
+			    	value, value of the tag
+
+			    	<h5>returns</h5>
+			    	<span class="link">Boolean</span>, whether to remove the tag or not
+				</div>
+			</div>				
 
 			<h2 class="page-header">Methods</h2>
-			<p class="lead">
-				Comming soon: A list of avaiale methods to interact with the widget.
-			</p>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">add( tag )</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Adds the given tag.
+	  				</p>
+			    	<h5>tag</h5>
+			    	String representing a tag value.
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">remove( tag )</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Removes the given tag if it exists.
+	  				</p>
+			    	<h5>tag</h5>
+			    	String representing a tag value.
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">get( )</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Returns an array of the present tags values.
+	  				</p>
+	  				<h5>returns</h5>
+			    	Array of tag values.
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">set( tags )</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Clears all present tags and adds the given ones.
+	  				</p>
+			    	<h5>tags</h5>
+			    	Array of tag values
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">clear( )</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Clears all present tags.
+	  				</p>
+				</div>
+			</div>	
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">focus ()</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Focuses the input field.
+	  				</p>
+				</div>
+			</div>	
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">getInputElement( )</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					Returns the input field created for the widget.
+	  				</p>
+			    	<h5>returns</h5>
+			    	<span class="link">jQuery object</span> 
+				</div>
+			</div>	
 		</div>
 
 		<script src="bower_components/jquery/dist/jquery.js"></script>

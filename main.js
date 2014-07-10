@@ -9,4 +9,10 @@ jQuery(function($) {
         style: 'bootstrap'
     });
 
+    $('.panel-default').hover(
+    	function(){
+			$(this).toggleClass('panel-primary').toggleClass('panel-default');
+    	}
+    );
+
 });
