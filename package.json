@@ -1,7 +1,7 @@
 {
   "name": "taginput",
   "title": "jQuery Taginput",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "jQuery plugin for tag input fields supporting different ui-styles",
   "repository": {
     "type": "git",
