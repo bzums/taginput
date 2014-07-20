@@ -1,20 +1,17 @@
 .taginput-wrapper {
-	padding: 4px;
+	padding: 0.4em;
 	height: auto;
+	cursor: text;
 }
 
 .taginput-tag {
-	margin-right: 3px;
+	margin-right: 0.3em;
 	display: inline-block;
-}
-
-.taginput-button {
-	float: right;
 }
 		
 .taginput-wrapper input[type=text] {
 	display: inline-block;
 	border: 0;
-	padding: 4px;
+	padding: 0.4em;
 	background-color: inherit;
 }

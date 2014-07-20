@@ -19,8 +19,51 @@
 				margin-top: 65px;
 			}
 
+			dl {
+				margin-left: 10px;
+			}
+
+			dd {
+				margin-bottom: 10px;
+			}
+
 			.navbar-header {
     			float: right;
+			}
+
+			div.custom-style input[type=text] {
+				display: inline-block;
+				border: 0;
+				background-color: inherit;
+			}
+
+			div.custom-style .inner {
+				background-color: #305e91;
+				color: #fff;
+				cursor: default;
+			}
+
+			div.custom-style .close-handler {
+				background-color: #608eB1;
+				cursor: pointer;
+			}
+
+			div.custom-style .close-handler:hover {
+				background-color: #507eA1;
+			}
+
+			div.custom-style .ui-icon {
+				display: inline-block;
+				background-image: url("ui-icons_ffffff_256x240.png");
+			}
+
+			div.custom-style .ui-button {
+				margin-left: -0.3em;
+				margin-right: 0;
+			}
+
+			div.custom-style .taginput-tag {
+				margin-right: 0.7em;
 			}
 
 			.com {
@@ -103,7 +146,7 @@
 			</p>
 			<div class="panel panel-default">
 	  			<div class="panel-body">
-			    		<input id="taginput-jqueryui" type="text"  />
+			    		<input id="taginput-jqueryui" type="text" value="jQuery,tag,ui" />
 				</div>
 				<div class="panel-footer">
 
@@ -118,7 +161,7 @@ $('selector').taginput({
 		
 			<div class="panel panel-default">
 	  			<div class="panel-body">
-			    	<input id="taginput-bootstrap" type="text" placeholder="Add tag" />
+			    	<input id="taginput-bootstrap" type="text" value="bootstrap,tag,ui" />
 				</div>
 				<div class="panel-footer">
 
@@ -131,6 +174,25 @@ $('selector').taginput({
 				</div>
 			</div>
 
+			<div class="panel panel-default">
+	  			<div class="panel-body">
+			    	<input id="taginput-custom" type="text" value="custom,tag,ui" />
+				</div>
+				<div class="panel-footer">
+
+<pre class="prettyprint">
+$('selector').taginput({
+    style: {
+      	tagTpl: $('#wrapperTpl').html(),
+       	wrapperTpl: '&lt;div class=&quot;custom-style&quot;&gt;',
+        deleteHandler: '.ui-icon-close'
+    }
+});
+</pre>
+					
+				</div>
+			</div>			
+
 			<h2 class="page-header">Options</h2>
 
 			<div class="panel panel-default">
@@ -140,11 +202,22 @@ $('selector').taginput({
 	  			<div class="panel-body">
 	  				<h4>Description</h4>
 	  				<p class="lead">
-	  					Determines the ui style the widget is created with.
+	  					Determines the ui style the widget is created with, which is either a preset (pass a String) or a custom style (pass an Object).
+	  				</p>
+	  				<p>
+	  					When passing an object, the following properties must be set: 
+	  					<dl>
+	  						<dt>tagTpl</dt>
+	  						<dd>HTML template representing a tag. Use <code>{{label}}</code> as placeholder for the label.</dd>
+	  						<dt>wrapperTpl</dt>
+	  						<dd>HTML template representing the wrapper around the input field.</dd>
+	  						<dt>deleteHandler</dt>
+	  						<dd><a href="http://api.jquery.com/category/selectors/">jQuery selector</a> for the element on which a click-handler is attached which will delete the tag.</dd>
+	  					</dl>
 	  				</p>
 
 			    	<h5>type</h5>
-			    	<span class="link">String</span>, <code>'jqueryui'</code> or <code>'bootstrap'</code>
+			    	<span class="link">String</span> (<code>'jqueryui'</code> or <code>'bootstrap'</code>) or <span class="link">Object</span>
 
 			    	<h5>default</h5>
 			    	<code>'jqueryui'</code>
@@ -166,6 +239,24 @@ $('selector').taginput({
 
 			    	<h5>default</h5>
 			    	<code>[32, 13, 9]</code> (whitespace, enter, tab)
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+    				<h3 class="panel-title">placeholder</h3>
+  				</div>
+	  			<div class="panel-body">
+	  				<h4>Description</h4>
+	  				<p class="lead">
+	  					The value of the placeholder of the newly created input field.
+	  				</p>
+
+			    	<h5>type</h5>
+			    	<span class="link">String</span>
+
+			    	<h5>default</h5>
+			    	<code>'Add tag...'</code>
 				</div>
 			</div>
 
@@ -339,7 +430,7 @@ function($tag) {
 
 			<div class="panel panel-default">
 				<div class="panel-heading">
-    				<h3 class="panel-title">focus ()</h3>
+    				<h3 class="panel-title">focus( )</h3>
   				</div>
 	  			<div class="panel-body">
 	  				<h4>Description</h4>
@@ -366,9 +457,22 @@ function($tag) {
 
 		<script src="bower_components/jquery/dist/jquery.js"></script>
 		<script src="bower_components/jqueryui/ui/jquery-ui.js"></script>
-		<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 		<script src="bower_components/google-code-prettify/src/prettify.js"></script>
 		<script src="src/jquery.taginput.src.js"></script>
 		<script src="main.js"></script>
+
+		<script type="text/template" id="wrapperTpl">
+			<span class="taginput-tag">
+				<span class="ui-button ui-button-text-icon-primary ui-corner-left inner">
+					<span class="ui-button-icon-primary ui-icon ui-icon-tag"></span>
+					<span class="ui-button-text">{{label}}</span>
+				</span>
+				<span class="ui-button ui-button-icon-only ui-corner-right inner close-handler">
+					<span class="ui-button-icon-primary ui-icon ui-icon-close"></span>
+					<span class="ui-button-text">close</span>
+				</span>
+			</span>
+		</script>
+
 	</body>
 </html>

@@ -2,7 +2,7 @@ jQuery(function ($) {
   'use strict';
 
     function getTagCount(){
-      return $('.taginput').taginput('get').length;
+      return $('#taginput').taginput('get').length;
     }
 
     function getTagCountDom(){
@@ -15,10 +15,19 @@ jQuery(function ($) {
         }
     });
 
+    QUnit.test("initial values", function(assert) {
+        expect( 2 );
+
+        var $input = $('#taginput').val('test1,test2').taginput();
+
+        assert.equal(getTagCount(), 2, "there should be two tags saved internally");
+        assert.equal(getTagCountDom(), 2, "and two corresponding DOM elements");
+    });
+
     QUnit.test("taginput.add", function(assert) {
         expect( 4 );
 
-        var $input = $('.taginput').taginput();
+        var $input = $('#taginput').taginput();
 
         $input.taginput('add', 'test');
 
@@ -31,7 +40,7 @@ jQuery(function ($) {
     QUnit.test("taginput.get", function(assert) {
         expect( 1 );
 
-        var $input = $('.taginput').taginput();
+        var $input = $('#taginput').taginput();
 
         $input.taginput('add', 'test');
 
@@ -43,7 +52,7 @@ jQuery(function ($) {
     QUnit.test("taginput.set", function(assert) {
         expect( 3 );
 
-        var $input = $('.taginput').taginput();
+        var $input = $('#taginput').taginput();
 
         var tags = ['test1', 'test2'];
         $input.taginput('set', tags);
@@ -56,7 +65,7 @@ jQuery(function ($) {
     QUnit.test("taginput.remove", function(assert) {
         expect( 3 );
         
-        var $input = $('.taginput').taginput();
+        var $input = $('#taginput').taginput();
         $input.taginput('add', 'test');
         $input.taginput('remove', 'test');
 
@@ -68,7 +77,7 @@ jQuery(function ($) {
     QUnit.test("taginput.clear", function(assert) {
         expect( 4 );
         
-        var $input = $('.taginput').taginput();    
+        var $input = $('#taginput').taginput();    
         $input.taginput('add', 'test1');
         $input.taginput('add', 'test2');
         $input.val('some');
@@ -83,7 +92,7 @@ jQuery(function ($) {
     QUnit.test("chaining", function(assert) {
         expect( 3 );
 
-        var $input = $('.taginput').taginput();
+        var $input = $('#taginput').taginput();
         var $retValue = null;
 
         $retValue = $input.taginput('add', 'test');
@@ -105,7 +114,7 @@ jQuery(function ($) {
     QUnit.test("dom add", function(assert) {
         expect( 2 );
 
-        var $input = $('.taginput').taginput();
+        var $input = $('#taginput').taginput();
         var $newInput = $('.taginput-wrapper input').val('test1');
 
         var event = $.Event( "keydown" );
@@ -119,7 +128,7 @@ jQuery(function ($) {
     QUnit.test("dom remove", function(assert) {
         expect( 2 );
 
-        var $input = $('.taginput').taginput();
+        var $input = $('#taginput').taginput();
         var $newInput = $('.taginput-wrapper input').val('test1');
 
         var event = $.Event( "keydown" );
@@ -135,7 +144,7 @@ jQuery(function ($) {
     QUnit.test("dom dissolve", function(assert) {
         expect( 3 );
 
-        var $input = $('.taginput').taginput();
+        var $input = $('#taginput').taginput();
         var $newInput = $('.taginput-wrapper input').val('test1');
 
         var event = $.Event( "keydown" );
@@ -160,7 +169,7 @@ jQuery(function ($) {
     QUnit.test("multiple entries", function(assert) {
         expect( 4 );
 
-        var $input = $('.taginput').taginput();
+        var $input = $('#taginput').taginput();
         $input.taginput('add', 'test');
         $input.taginput('add', 'test');
 
@@ -169,15 +178,11 @@ jQuery(function ($) {
 
         $input.taginput('destroy');
 
-        //$input.taginput('get');
-
         $input.taginput({
             allowMultiple: true
         });
         $input.taginput('add', 'test');
         $input.taginput('add', 'test');
-
-        console.log($input.taginput('get'));
 
         assert.equal(getTagCount(), 2, "when allowMultiple is true two tags with the same value should be added both");
         assert.equal(getTagCountDom(), 2, "and the corresponding DOM elements");
@@ -186,7 +191,7 @@ jQuery(function ($) {
     QUnit.test("caseSensitive", function(assert) {
         expect( 2 );
 
-        var $input = $('.taginput').taginput({
+        var $input = $('#taginput').taginput({
             caseSensitive: true
         });
 
@@ -200,7 +205,7 @@ jQuery(function ($) {
     QUnit.test("onAdd", function(assert) {
         expect( 2 );
 
-        var $input = $('.taginput').taginput({
+        var $input = $('#taginput').taginput({
             onAdd: function(tag){
                 return false;
             }
@@ -215,7 +220,7 @@ jQuery(function ($) {
     QUnit.test("onRemove", function(assert) {
         expect( 2 );
 
-        var $input = $('.taginput').taginput({
+        var $input = $('#taginput').taginput({
             onRemove: function(tag){
                 return false;
             }

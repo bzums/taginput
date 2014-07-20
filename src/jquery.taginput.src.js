@@ -21,16 +21,18 @@
         BACKSPACE: 8
     },
 
-    style = {
+    stylePresets = {
 
         jqueryui: {
-            tagTpl: '<button class="taginput-tag ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-secondary" role="button" aria-disabled="false"><span class="ui-button-icon-secondary ui-icon ui-icon-close"></span><span class="ui-button-text"></span></button>',
-            wrapperTpl: '<div class="taginput-wrapper ui-widget ui-widget-content ui-corner-all"></div>'
+            tagTpl: '<span class="taginput-tag ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-secondary"><span class="ui-button-icon-secondary ui-icon ui-icon-close"></span><span class="ui-button-text">{{label}}</span></span>',
+            wrapperTpl: '<div class="taginput-wrapper ui-widget ui-widget-content ui-corner-all"></div>',
+            deleteHandler: null
         },
 
         bootstrap: {
-            tagTpl: '<button class="taginput-tag btn btn-default btn-sm"><span class="glyphicon glyphicon-remove"></span><span></span></button>',
-            wrapperTpl: '<div class="taginput-wrapper form-control"></div>'
+            tagTpl: '<span class="taginput-tag btn btn-default btn-sm"><span>{{label}}</span> <span class="glyphicon glyphicon-remove"></span></span>',
+            wrapperTpl: '<div class="taginput-wrapper form-control"></div>',
+            deleteHandler: null
         }
     },
 
@@ -77,25 +79,40 @@
 
     	_create: function (options) {
             
+            var self = this;
+
 			this.options = $.extend({}, defaults, options);
+
+            // Determine whether to use a preset or a custom style
+            if(typeof this.options.style === 'string'){
+                this.style = stylePresets[ this.options.style ];
+            }else{
+                this.style = this.options.style;
+            }
 
 			this.$element.hide();
 
 			this.$input = $('<input type="text" placeholder="' + this.options.placeholder + '"/>')
 				.insertAfter(this.$element);
 
-            this.$input.wrap(style[ this.options.style ].wrapperTpl);
+            this.$input.wrap(this.style.wrapperTpl);
+            this.$wrapper = this.$input.parent();
             
             // Bind events
             this.$input.on( 'keydown.taginput', $.proxy(this._keydown, this));
 
             // Ease to focus input field
-            var self = this;
-            this.$input.parent().on( 'click.taginput', 
+            this.$wrapper.on( 'click.taginput', 
             	function(){
-                    self.focus();
+                    self.$input.focus();
                 }
             );
+
+            // Add initial values
+            var initialValues = this.$element.val().split(',');
+            $.each(initialValues, function(index, value){
+                self.add($.trim(value));
+            });
         },
         
         // Keydown handler for the input field
@@ -126,6 +143,56 @@
             }  
         },
 
+        // Super-simple-minimal-ultrabasic-'template-engine'
+        // Used to build a tag elment with given data...
+        // which means: replace {{label}} with the given label
+        _template: function(str, label){
+
+            var matcher = /{{([\s\S]+?)}}/g;
+
+            return  str.replace(matcher, function(match){
+
+                if(match === '{{label}}'){
+                    return label;
+                }
+            });
+        },
+
+        // Creates a tag element and adds it to the DOM
+        _createTagView: function(tag){
+
+            var self = this;
+
+            var $tag = $(this._template(
+                this.style.tagTpl, 
+                this.options.tagLabel(tag)
+            ));
+
+            // Add taginput object as data
+            $tag.data('taginput-data', tag);
+            this.$input.before($tag);
+
+            // Add delete handler, if not avoided by setting 
+            // the deleteHandler to false
+            if(this.style.deleteHandler !== false){  
+
+                var handler = this.style.deleteHandler;
+
+                // Check if the handler is the tag element itself
+                if($tag.is(this.style.deleteHandler)){
+                    // When passing null as selector to on(), the
+                    // listener is attached to the element on 
+                    // which on() is called
+                    handler = null;
+                }
+
+                $tag.on('click.taginput', handler, function(event){
+                    event.preventDefault();
+                    self.remove(tag);
+                });
+            }
+        },
+
         // Checks whether there is text in input field, if so:
         // creates tag and clears input field
         _createTagFromInputField: function(){
@@ -140,8 +207,8 @@
             }
         },
         
-        // Edit the latest tag: if there are tags delete the latest one and fill input field
-        // with the name of the tag
+        // Edit the latest tag: if there are tags delete the latest 
+        // one and fill input field with the name of the tag
         _dissolveLast: function(){
 
             if(this._tags.length > 0){
@@ -207,6 +274,7 @@
 
             this.$input.parent().remove();
             this.$element.removeData(pluginName);
+            this.$element.val('');
 
             return this.$element[0];
         },
@@ -228,7 +296,12 @@
         // Adds a new tag with given name and data to the widget,
         // but only if the tag name is not present, yet
         add: function(tag){
+
             var self = this;
+
+            if(this.options.tagValue(tag) === ''){
+                return this.$element[0];
+            }
 
             // Call exists if tag already exists
             if(!this.options.allowMultiple && this.exists(tag)){
@@ -249,19 +322,12 @@
                 if(!avoidAdd){
 	            
                     // View
-    	            var $tag = $(style[this.options.style].tagTpl);
-    	            $tag.children().last().html(this.options.tagLabel(tag));
-
-    	            $tag.data('taginput-data', tag)
-    	            .on('click', function(event){
-    	                event.preventDefault();
-    	                self.remove(tag);
-    	            });
-    	            this.$input.before($tag);
+                    this._createTagView(tag);
     	            
     	            // Model
     	            this._tags.push(tag);
 
+                    // Update original input field value
                     this._pushVal();
                 }
 	        }
