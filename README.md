@@ -9,7 +9,7 @@ I am trying to combine the best parts of existing implementations and to provide
 
 ## Usage
 Examples can be found [here](http://bzums.github.com/taginput/).
-Furthermore i create a small sample application where i used the taginput widget, the project can be found [here](http://bzums.github.com/js-local-notes/).
+Furthermore i create a small sample application where i used the taginput widget, the project can be found [here](https://github.com/bzums/js-local-notes).
 
 ## Tests
 Test suite can be found [here](http://bzums.github.io/taginput/test/taginput.html).
